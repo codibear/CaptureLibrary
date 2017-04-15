@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:id="@+id/rank_layout"
+    android:paddingTop="20dp"
+    android:paddingBottom="10dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rank_id"
+        android:layout_gravity="center"
+        android:text="1"
+        android:padding="10dp"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/rank_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/bear"
+            android:layout_centerInParent="true"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_gravity="top"
+        android:id="@+id/rank_name"
+        android:paddingStart="5dp"
+        android:textSize="20dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="小熊"/>
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+            android:paddingStart="5dp"
+        android:layout_weight="1"
+        android:layout_gravity="bottom"
+        android:id="@+id/rank_major"
+        android:text="计算机科学与技术西"/>
+    </LinearLayout>
+
+</LinearLayout>
