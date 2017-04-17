@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout linearTimer;
     private LinearLayout linearRank;
     private FragmentManager fragmentManager;
-    private FrameLayout contanier;//装载你的fragment的容器，add，replace的就是这里面放的fragment
+    private FrameLayout contanier;   //装载fragment的容器，add，replace的就是这里面放的fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +39,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         fragmentManager = getSupportFragmentManager();
 
-        //start  在activity显示的时候最好是又一个默认的显示页面，一般都是默认显示第一个，所以是add方法，到后面之后就额可以replace方法
+        //默认当前的Activity显示一个Fragment，否则的话就会出现白板
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         fragmentTimer = new FragmentTimer();
         transaction.add(R.id.contanier, fragmentTimer);
         transaction.commit();
-        //end
-
-
     }
 
     @Override
@@ -63,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-
+    //初始化界面
     public void initView() {
 
         linearContract = (LinearLayout) findViewById(R.id.contractLayout);
@@ -100,11 +97,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         linearRank.setOnClickListener(this);
 
     }
-
+    //通过选取的Layout（注意这里并不是图标），来切换界面，选中的同时将图标换成选中的状态
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.contractLayout://点击方法应该是你想点击的那个控件的id，而且可以直接在这里面进行操作了，你又写了下面的selectTab（）有点多余，不过看着清晰
+            case R.id.contractLayout:
                 selectTab(0);
                 imageConstract.setImageResource(R.drawable.ic_constract_on);
                 break;
@@ -139,9 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                      transaction.show(fragmentContract);
                 }
-
                 break;
-
             case 1:
                 if(fragmentTimer == null){
                fragmentTimer = new FragmentTimer();
@@ -149,9 +144,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{
                     transaction.show(fragmentTimer);
                 }
-
                 break;
-
             case 2:
                 if(fragmentRank == null) {
                     fragmentRank = new FragmentRank();
@@ -165,6 +158,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         transaction.commit();
     }
+
+    /**
+     * 判断Fragment是否存在，存在的话，隐藏特们以免出现Fragment重叠现象
+     * @param fragmentTransaction
+     */
     private void hideFragment(FragmentTransaction fragmentTransaction){
         if(fragmentContract != null){
             fragmentTransaction.hide(fragmentContract);

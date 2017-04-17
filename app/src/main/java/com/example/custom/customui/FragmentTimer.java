@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 /**
  * Created by 29185 on 2017/3/13.
+ * 计时用的Fragment
  */
 
-public class FragmentTimer extends android.support.v4.app.Fragment  /*View.OnClickListener*/{
+public class FragmentTimer extends android.support.v4.app.Fragment  {
 
-  static  long start_time = 0 ;
-    static  long end_time = 0 ;
-    static long mRecordTime = 0;
+    static long start_time = 0 ;    //用于记录开始时间
+    static long end_time = 0 ;      //用于记录终止时间
+    static long mRecordTime = 0;    //用于记录开始后所得到的时间，再次计时使用
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -31,15 +32,15 @@ public class FragmentTimer extends android.support.v4.app.Fragment  /*View.OnCli
         final Chronometer chronometer = (Chronometer)view.findViewById(R.id.timer);
         final Button submit = (Button)view.findViewById(R.id.submit);
         final TextView textTime = (TextView)view.findViewById(R.id.learntime) ;
-        submit.setEnabled(false);
 
-
-
-
+        submit.setEnabled(false);       //默认提交时间的按钮是不能点击的，只有当终止后才能点击
+        stopButton.setEnabled(false);   //默认终止时间的按钮是不能点击的，只有当开始后才能点击
         startButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+/**
+ * 如果有记录的时间，所得到的时间应该是（当前时间-记录时间）
+ */
             if (mRecordTime != 0) {
                 chronometer.setBase(chronometer.getBase() + (SystemClock.elapsedRealtime() - mRecordTime));
             } else {
@@ -73,8 +74,8 @@ public class FragmentTimer extends android.support.v4.app.Fragment  /*View.OnCli
             @Override
             public void onClick(View v) {
                long time1 = SystemClock.elapsedRealtime() - start_time;
-                long time2 = (time1/1000)/59;
-               long  time = (time1/1000)%59;
+                long time2 = (time1/1000)/59;       //获得分钟
+               long  time = (time1/1000)%59;        //获得秒
                 textTime.setText("您学习了"+time2+"分"+time+"秒");
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.stop();
@@ -82,8 +83,6 @@ public class FragmentTimer extends android.support.v4.app.Fragment  /*View.OnCli
                 submit.setEnabled(false);
             }
         });
-
-
         return view;
     }
 
