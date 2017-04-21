@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 public class TransitionActivity extends Activity {
     ImageView imageInit;
+    HttpTransfer httpTransfer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

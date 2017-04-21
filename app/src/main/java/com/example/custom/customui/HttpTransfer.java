@@ -1,8 +1,6 @@
 package com.example.custom.customui;
 
-import android.util.Log;
-
-import org.json.JSONObject;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -13,33 +11,57 @@ import okhttp3.Response;
 /**
  * Created by 29185 on 2017/4/14.
  */
-
 public class HttpTransfer {
 
     static String responseData;
 
-    private void sendRequest(final int id){
+    /**
+     *
+     * @param url url we use to pass
+     * @param id students' id
+     * @param account account has registed,use to authenticate
+     * @param passwd password has registed,use to authenticate
+     */
+    private String getData(final String url,final int id,  final String account, final String passwd){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
+
                     OkHttpClient client = new OkHttpClient();
+                    client = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .writeTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(30, TimeUnit.SECONDS)
+                            .build();
                     Request request = new Request.Builder()
-                            .url("http://lidengming.com:8080/api/v1.0/users/"+id)
-                            .addHeader("1@1.com","123")
+                            .url(url+id)
+                            .addHeader(account,passwd)
                             .build();
 
                     Response response = client.newCall(request).execute();
 
-                    String responseData = response.body().string();
-                    parseJSONWithGet(responseData);
+                     String responseData = response.body().string();
+
+                    //parseJSONWithGet(responseData);
                 }
                 catch (Exception e){e.printStackTrace();}
 
             }
-        }).start();}
+        }).start();
+        return responseData;
+    }
 
-    private void postData(final String basic){
+    /**
+     *
+     * This method is to post data (by the time keep time in sever)to get an id
+     * which we will use to end the timekeeper,so we should parse the jsondata's id
+     * then use the id in putData method
+     *
+     * @param url url we use to pass
+     *
+     */
+    private String postData(final String url){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -49,25 +71,33 @@ public class HttpTransfer {
                     MediaType mediaType = MediaType.parse("application/json");
                     RequestBody body = RequestBody.create(mediaType, "{\n\t\n}");
                     Request request = new Request.Builder()
-                            .url("http://lidengming.com:8080/api/v1.0/studys/")
+                            .url(url)//"http://lidengming.com:8080/api/v1.0/studys/"
                             .post(body)
                             .addHeader("content-type", "application/json")
-                            .addHeader("authorization", "Basic YmxsbGk6MTIz"+basic)
+                            .addHeader("authorization", "Basic YmxsbGk6MTIz")
                             .addHeader("cache-control", "no-cache")
                             .build();
 
                     Response response = client.newCall(request).execute();
 
                     responseData = response.body().string();
-                    parseJSONWithPOST(responseData);
+                   // parseJSONWithPOST(responseData);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         }).start();
+        return responseData;
     }
 
-    private void putData(final int postid){
+    /**
+     *
+     * @param url the url which want put to
+     * @param postid url's last id appended
+     *               this id wiil refresh everytime you post data
+     *               the id is a flag to flag users' thread
+     */
+    private String putData(final String url,final int postid){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -76,7 +106,7 @@ public class HttpTransfer {
                     MediaType mediaType = MediaType.parse("application/json");
                     RequestBody body = RequestBody.create(mediaType, "{\n\t\n}");
                     Request request = new Request.Builder()
-                            .url("http://lidengming.com:8080/api/v1.0/studys/"+postid)
+                            .url(url+postid)//"http://lidengming.com:8080/api/v1.0/studys/"
                             .put(body)
                             .addHeader("content-type", "application/json")
                             .addHeader("authorization", "Basic YmxsbGk6MTIz")
@@ -85,7 +115,7 @@ public class HttpTransfer {
 
                     Response response = client.newCall(request).execute();
                     responseData = response.body().string();
-                    parseJSONWithPUT(responseData);
+                   // parseJSONWithPUT(responseData);
                 }
                 catch (Exception e)
                 {
@@ -93,47 +123,6 @@ public class HttpTransfer {
                 }
             }
         }).start();
+        return responseData;
     }
-
-    private void parseJSONWithPOST(String jsonData)
-    {
-        try{
-            JSONObject jsonObject = new JSONObject(jsonData);
-            int id = jsonObject.getInt("id");
-            String end_time = jsonObject.getString("end_time");
-            String start_time = jsonObject.getString("start_time");
-            String duration = jsonObject.getString("duration");
-
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(id);
-            stringBuilder.append(end_time);
-            stringBuilder.append("start:"+start_time);
-            String completedString = stringBuilder.toString();
-        }catch (Exception e){e.printStackTrace();}
-    }
-    private void parseJSONWithGet(String jsonData){
-        try{
-            JSONObject jsonObject = new JSONObject(jsonData);
-            String user = jsonObject.getString("last_seen");
-            String study = jsonObject.getString("studys");
-            String usersid=jsonObject.getString("username");
-            Log.e("Main", "user is :"+user );
-            Log.e("Main", "stud"+ study );
-            Log.e("Main", "userid "+usersid );
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private void parseJSONWithPUT(String jsonData){
-        try{
-            JSONObject jsonObject = new JSONObject(jsonData);
-            String message = jsonObject.getString("message");
-            Log.e("Main", "msg is :"+message );
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
 }
