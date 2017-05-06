@@ -42,6 +42,7 @@
             android:layout_weight="3"
             android:autoLink="all"
             android:gravity="center"
+            android:onClick="alterText"
             android:text="用户须知"
             android:textColor="@color/intension"
             android:textSize="20sp" />

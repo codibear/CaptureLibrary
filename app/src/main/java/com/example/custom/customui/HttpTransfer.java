@@ -1,7 +1,5 @@
 package com.example.custom.customui;
 
-import java.util.concurrent.TimeUnit;
-
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -12,6 +10,9 @@ import okhttp3.Response;
  * Created by 29185 on 2017/4/14.
  */
 public class HttpTransfer {
+
+    ParseJson parseJson = new ParseJson();
+
 
     static String responseData;
 
@@ -29,11 +30,11 @@ public class HttpTransfer {
                 try{
 
                     OkHttpClient client = new OkHttpClient();
-                    client = new OkHttpClient.Builder()
+                    /*client = new OkHttpClient.Builder()
                             .connectTimeout(10, TimeUnit.SECONDS)
                             .writeTimeout(10, TimeUnit.SECONDS)
                             .readTimeout(30, TimeUnit.SECONDS)
-                            .build();
+                            .build();*/
                     Request request = new Request.Builder()
                             .url(url+id)
                             .addHeader(account,passwd)
@@ -42,7 +43,7 @@ public class HttpTransfer {
                     Response response = client.newCall(request).execute();
 
                      String responseData = response.body().string();
-
+                     parseJson.parseJSONWithGet(responseData);
                     //parseJSONWithGet(responseData);
                 }
                 catch (Exception e){e.printStackTrace();}
@@ -89,6 +90,34 @@ public class HttpTransfer {
         }).start();
         return responseData;
     }
+   /* private String postData(final String url,final String username,final String passwd,final String stu_id,final String stu_pwd){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    OkHttpClient client = new OkHttpClient();
+
+                    MediaType mediaType = MediaType.parse("application/json");
+                    RequestBody body = RequestBody.create(mediaType, "{\n\t"username":"username",\n}");
+                    Request request = new Request.Builder()
+                            .url(url)//"http://lidengming.com:8080/api/v1.0/studys/"
+                            .post(body)
+                            .addHeader("content-type", "application/json")
+                            .addHeader("authorization", "Basic YmxsbGk6MTIz")
+                            .addHeader("cache-control", "no-cache")
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+
+                    responseData = response.body().string();
+                    // parseJSONWithPOST(responseData);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+        return responseData;
+    }*/
 
     /**
      *

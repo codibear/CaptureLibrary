@@ -2,6 +2,7 @@ package com.example.custom.customui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
@@ -32,5 +33,10 @@ public class TransitionActivity extends Activity {
                 }
             }
         }, 3000);
+    }
+    private boolean isLogin(){
+        SharedPreferences pref = getSharedPreferences("rememberPasswd",MODE_PRIVATE);
+        boolean remember = pref.getBoolean("isChecked",false);
+        return remember;
     }
 }

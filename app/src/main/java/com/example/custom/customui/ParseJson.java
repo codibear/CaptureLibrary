@@ -4,12 +4,15 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 /**
  * Created by 29185 on 2017/4/21.
  */
 
 public class ParseJson {
-    private void parseJSONWithPOST(String jsonData)
+    StringBuffer stringBufferGet = new StringBuffer();
+    public  void parseJSONWithPOST(String jsonData)
     {
         try{
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -25,21 +28,22 @@ public class ParseJson {
             String completedString = stringBuilder.toString();
         }catch (Exception e){e.printStackTrace();}
     }
-    private void parseJSONWithGet(String jsonData){
+    public  HashMap parseJSONWithGet(String jsonData){
+        HashMap<String,String> getUser = new HashMap<>();
         try{
             JSONObject jsonObject = new JSONObject(jsonData);
-            String user = jsonObject.getString("last_seen");
-            String study = jsonObject.getString("studys");
-            String usersid=jsonObject.getString("username");
-            Log.e("Main", "user is :"+user );
-            Log.e("Main", "stud"+ study );
-            Log.e("Main", "userid "+usersid );
-
+            String last_seen = jsonObject.getString("last_seen");
+            String studys = jsonObject.getString("studys");
+            String username=jsonObject.getString("username");
+            getUser.put("last_seen",last_seen);
+            getUser.put("studys",studys);
+            getUser.put("username",username);
         }catch (Exception e){
             e.printStackTrace();
         }
+        return getUser;
     }
-    private void parseJSONWithPUT(String jsonData){
+    public  void parseJSONWithPUT(String jsonData){
         try{
             JSONObject jsonObject = new JSONObject(jsonData);
             String message = jsonObject.getString("message");
